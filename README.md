@@ -21,17 +21,25 @@ If you want to run 10 different seeds of Top_Down_mix.py in parallel, you can us
 The recovering of Fig.1 in the paper. Detailed statistic data has some difference with original figures in the paper.
  <br/><img src='/results/base/Average_cooperation_rate_in_b_2_5_10.png'>
 
-
+#### High Benefitial Ratio b/c = 10
 The effective norms 9 builds a stable high cooperation 76% with low variance in high benefitial rate b/c=10. 
  <br/><img src='/results/base/norm9_b10/norm9_b10_Rate_20seeds_epi20000.png'>
  <br/><img src='/results/base/norm9_b10/norm9_b10_seed12810_Results_epi20000.png'>
-
 
 
 The ineffective norms 0 or norm 15 could not maintain a stable cooperation even in high benefitial rate b/c=10. The average cooperation rate is 39% with higher viarance in different seeds. The reward and cooperation rate fluctuate.
  <br/><img src='/results/base/norm0_b10/norm0_b10_Rate_20seeds_epi20000.png'>
  <br/><img src='/results/base/norm0_b10/norm0_b10_seed10887_Results_epi20000.png'>
 
+#### Medium Benefitial Ratio b/c = 5
+The effective norms 9 holds a low cooperation 0.25% in medium benefitial rate b/c=5. 
+ <br/><img src='/results/base/norm9_b5/norm9_b5_Rate_20seeds_epi20000.png'>
+ <br/><img src='/results/base/norm9_b5/norm9_b5_seed8371_Results_epi20000.png'>
+
+
+The effective norms 0 holds a low cooperation 0.26% in medium benefitial rate b/c=5. 
+ <br/><img src='/results/base/norm0_b5/norm0_b5_Rate_20seeds_epi20000.png'>
+ <br/><img src='/results/base/norm0_b5/norm0_b5_seed6096_Results_epi20000'>
 
 
 ### Top-Down Seeding
