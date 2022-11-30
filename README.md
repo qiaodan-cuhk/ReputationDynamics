@@ -39,7 +39,7 @@ The effective norms 9 holds a low cooperation 0.25% in medium benefitial rate b/
 
 The effective norms 0 holds a low cooperation 0.26% in medium benefitial rate b/c=5. 
  <br/><img src='/results/base/norm0_b5/norm0_b5_Rate_20seeds_epi20000.png'>
- <br/><img src='/results/base/norm0_b5/norm0_b5_seed6096_Results_epi20000'>
+ <br/><img src='/results/base/norm0_b5/norm0_b5_seed6096_Results_epi20000.png'>
 
 
 ### Top-Down Seeding
