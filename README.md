@@ -8,11 +8,11 @@ Paper Link： https://arxiv.org/abs/2102.07523
 
 If you want to test the top-bottom with social norm 9, episode=100000, benefit ratio b=5, seed=83, seeding agents number k=1, intrinsic reward rate alpha=0.6, you can use 
 
-'python Top_Down_mix.py --seed 83 --episode 100000 --norm 9 --alpha 0.6 --b 5 --k 1'
+`python Top_Down_mix.py --seed 83 --episode 100000 --norm 9 --alpha 0.6 --b 5 --k 1`
 
 If you want to run 10 different seeds of Top_Down_mix.py in parallel, you can use
 
-'sh mix_run.sh'
+`sh mix_run.sh`
 
 
 
