@@ -293,7 +293,6 @@ norm = args.norm           # social norm choice
 alpha = args.alpha   # 0.3, 0.6, 0.9 for effective norm 9
 b = args.b             # benificial
 
-
 N = 10            # agents number
 c = 1             # donor game cost
 K = 200           # random encounters
@@ -308,12 +307,9 @@ device = torch.device("cpu")
 N_STATES = 2  # opponent's reputation  bad = 0，good = 1  
 ACTIONS = 2  #  0 = defect  1 = cooperate
 
-
-
 # 文件名
 file_path_prefix = '/home/qiaodan/results/Reputation/intro/alpha8'
 data_file = os.path.join(file_path_prefix, "b{}_norm{}_seed{}.csv".format(b, norm, seed))
-
 
 with open(data_file, 'w', encoding='UTF8', newline='') as f:
     writer = csv.writer(f)
@@ -323,20 +319,3 @@ with open(data_file, 'w', encoding='UTF8', newline='') as f:
 
     ave_reward, ave_rate, reward_epi, rate_epi = Rep_episode(seed)
     writer.writerow(reward_epi)
-
-    # return_all_seeds.append(ave_reward)
-    # rate_all_seeds.append(ave_rate)  
-
-# ave_seeds_reward = torch.tensor(rate_all_seeds).mean()
-# ave_seeds_corate = torch.tensor(rate_all_seeds).mean()
-# per = ave_seeds_corate * 100
-
-# x_list = list(range(seed_episode))
-# plt.figure(dpi=300, figsize=(24,8))
-# plt.bar(x_list, rate_all_seeds)
-# plt.hlines(ave_seeds_corate, 0, 10, color='red')
-# plt.xticks(x_list, seed_list)
-# plt.xlabel('Seeds')
-# plt.ylabel('Cooperation Rate')
-# plt.title('Cooperation Rate in 10 seeds, norm {}, b={}, alpha={}, average rate is {}%'.format(norm, b, alpha, per))
-# plt.savefig('/home/qiaodan/results/Reputation/intro/norm{}_b{}_{}seeds_epi{}_alpha{}.png'.format(norm, b, seed_episode , episode, alpha*100))
