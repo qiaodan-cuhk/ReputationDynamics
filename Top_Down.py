@@ -280,7 +280,7 @@ for seed_index in range(10):
         plt.xlabel('Episodes')
         plt.ylabel('Cooperation Rate')
         plt.title('Ave Cooperation Rate (norm {}, b={}, seed={})'.format(norm, b, seed))
-        plt.savefig('/home/qiaodan/results/Reputation/epi20000/norm{}_b{}_seed{}_Results_epi{}.png'.format(norm, b, seed, episode))
+        plt.savefig('/home/qiaodan/Code/ReputationDynamics/results/base/norm{}_b{}_epi{}_seed{}.png'.format(norm, b, episode, seed))
 
 
 ave_20seeds_corate = torch.tensor(rate_20seeds).mean()
@@ -294,5 +294,5 @@ plt.xticks(seed_list, seed_20_list)
 plt.xlabel('Seeds')
 plt.ylabel('Cooperation Rate')
 plt.title('Cooperation Rate in 20 seeds, norm {}, beneficial={}, average rate is {}%'.format(norm, b, per))
-plt.savefig('/home/qiaodan/results/Reputation/epi20000/norm{}_b{}_Rate_20seeds_epi{}.png'.format(norm, b, episode))
+plt.savefig('/home/qiaodan/Code/ReputationDynamics/results/base/norm{}_b{}_epi{}_Rate_allseeds.png'.format(norm, b, episode))
 plt.show()
