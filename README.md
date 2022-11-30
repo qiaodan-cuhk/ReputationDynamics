@@ -13,13 +13,17 @@ The recovering of Fig.1 in the paper. Detailed statistic data has some differenc
  <br/><img src='/results/base/Average_cooperation_rate_in_b_2_5_10.png'>
 
 
-The ineffective norms 0 or norm 15 could not maintain a stable cooperation. The reward and cooperation rate fluctuate as follows.
- <br/><img src='/results/base/norm0_b10/norm0_b10_seed10887_Results_epi20000.png'>
- <br/><img src='/results/base/norm0_b10/norm0_b10_Rate_20seeds_epi20000.png'>
-
-The ineffective norms 9 builds a stable high cooperation in high benefitial rate b/c=10. 
- <br/><img src='/results/base/norm9_b10/norm9_b10_seed12810_Results_epi20000.png'>
+The effective norms 9 builds a stable high cooperation 76% with low variance in high benefitial rate b/c=10. 
  <br/><img src='/results/base/norm9_b10/norm9_b10_Rate_20seeds_epi20000.png'>
+ <br/><img src='/results/base/norm9_b10/norm9_b10_seed12810_Results_epi20000.png'>
+
+
+
+The ineffective norms 0 or norm 15 could not maintain a stable cooperation even in high benefitial rate b/c=10. The average cooperation rate is 39% with higher viarance in different seeds. The reward and cooperation rate fluctuate.
+ <br/><img src='/results/base/norm0_b10/norm0_b10_Rate_20seeds_epi20000.png'>
+ <br/><img src='/results/base/norm0_b10/norm0_b10_seed10887_Results_epi20000.png'>
+
+
 
 ### Top-Down Seeding
 The recovering of Fig.2 in the paper. 
