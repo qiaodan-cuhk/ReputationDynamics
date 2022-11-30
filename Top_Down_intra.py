@@ -308,7 +308,7 @@ N_STATES = 2  # opponent's reputation  bad = 0，good = 1
 ACTIONS = 2  #  0 = defect  1 = cooperate
 
 # 文件名
-file_path_prefix = '/home/qiaodan/results/Reputation/intro/alpha8'
+file_path_prefix = '/home/qiaodan/results/Reputation/intro/alpha4'
 data_file = os.path.join(file_path_prefix, "b{}_norm{}_seed{}.csv".format(b, norm, seed))
 
 with open(data_file, 'w', encoding='UTF8', newline='') as f:

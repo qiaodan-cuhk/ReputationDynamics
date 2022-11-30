@@ -25,4 +25,7 @@ Alpha = 0.9
 
 Alpha = 0.8
  <br/><img src='/results/intrinsic/alpha80_b5_norm9.png'>
+
+ Alpha = 0.6
+ <br/><img src='/results/intrinsic/alpha60_b5_norm9.png'>
  
