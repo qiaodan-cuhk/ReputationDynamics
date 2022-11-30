@@ -9,6 +9,8 @@ Paper Link： https://arxiv.org/abs/2102.07523
 
 ## Results
 ### Top-Down Base Reputation
+The recovering of Fig.1 in the paper. Detailed statistic data has some difference with original figures in the paper.
+ <br/><img src='/home/qiaodan/Code/ReputationDynamics/results/base/Average_cooperation_rate_in_b_2_5_10.png'>
 
 
 
