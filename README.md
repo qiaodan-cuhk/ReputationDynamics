@@ -18,9 +18,9 @@ If you want to run 10 different seeds of Top_Down_mix.py in parallel, you can us
 
 1. 在 Top-Down Base 实验中，原文设定episode为10000，不足以保证策略稳定收敛，在我们的实验里修改为episode=20000；原文没给定buffer size，本实验设定为500；仅统计平均奖励以及双方共同合作的比率作为合作概率。实验结果与原文趋势一致，但结果有较大差异；
 2. 在 Seeding 实验中，较好还原了原文结果，当fixed agents数量增多时，具有良好社会规范 norm 9 的实验平均奖励递增，具有低效社会规范 norm 0 的实验平均奖励递减。
-3. 原文奖励曲线普遍从 2 开始先下降再上升，推测其设定agent初始策略为 50% 合作 50% 背叛，但如何在固定 epsilon 的情况下进行该初始化？
-4. 原文内在激励部分公式typo，应该为 R = (1-\alpha)·U + \alpha·S，如此才符合 alpha 接近1时环境真实信号被淹没在内省奖励信号中，从而趋于均值奖励2；内省奖励与真实奖励加权后计入transition，声誉和环境奖励仅基于真实动作，内省奖励基于内省动作，最后统计奖励时account real rewards。实验效果与原文差距极大。
-5. To Do List： Decentralized Norm （但需要先确定内省奖励机制没问题）
+3. 原文奖励曲线普遍从 2 开始先下降再上升，推测其设定agent初始策略为 50% 合作 50% 背叛。
+4. 原文内在激励部分公式typo，应该为 R = (1-\alpha)·U + \alpha·S，如此才符合 alpha 接近1时环境真实信号被淹没在内省奖励信号中，从而趋于均值奖励2；内省奖励与真实奖励加权后计入transition，声誉和环境奖励仅基于真实动作，内省奖励基于内省动作，最后统计奖励时account real rewards。
+5. To Do List： Decentralized bottom-up Norm 
 
 
 ## Results
@@ -56,17 +56,19 @@ The recovering of Fig.2 in the paper.
  
 
 ### 3. Top-Down Intrinsic Reward
-The recovering of Fig.4 in the paper. 
+The recovering of Fig.4 in the paper. b/c = 5, norm 9.
 
 Alpha = 0.9
- <br/><img src='/results/intrinsic/alpha90_b5_norm9.png'>
+ <br/><img src='/results/intrinsic/alpha90.png'>
 
 Alpha = 0.8
- <br/><img src='/results/intrinsic/alpha80_b5_norm9.png'>
+ <br/><img src='/results/intrinsic/alpha80.png'>
 
 Alpha = 0.6
- <br/><img src='/results/intrinsic/alpha60_b5_norm9.png'>
+ <br/><img src='/results/intrinsic/alpha60.png'>
  
+Alpha = 0.3
+ <br/><img src='/results/intrinsic/alpha30.png'>
 
 
 ### 4. Top-Down Seeding + Intrinsic Reward

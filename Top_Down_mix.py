@@ -214,10 +214,11 @@ def Rep_episode(epi_index):
                 r_ave = (r1+r2)/2      # real reward from env
 
                 a_intro1, a_intro2 = agent.take_action(s2, p1, seed_state1), agent.take_action(s1, p2, seed_state2)    # introspective action take_action(state, index)
-                r_intro1, r_intro2 = reward_func(a_intro1, a_intro2, b, c)
+                r_intro1, r_drop1 = reward_func(a_intro1, a_intro1, b, c)  
+                r_intro2, r_drop2 = reward_func(a_intro2, a_intro2, b, c)  
                 r_sum1 = (1-alpha)*r1 + alpha*r_intro1
                 r_sum2 = (1-alpha)*r2 + alpha*r_intro2   # Ri = 1-\alpha Ui + \alpha Si bigger alpha means bigger introspecture
-                 
+                
                 buffer.add(s1, a1, r_sum1, s1_, p1)
                 buffer.add(s2, a2, r_sum2, s2_, p2)  
                 
@@ -263,23 +264,23 @@ def Rep_episode(epi_index):
         # return_all_seeds.append(seed_ave_return)
         # rate_all_seeds.append(seed_ave_rate)   
 
-        """plot 每个seed下 whole episode 的奖励和合作率"""
-        episodes_list = list(range(len(return_list)))
-        plt.figure(figsize=(16, 5))
-        plt.subplot(121)
-        plt.plot(episodes_list, return_list)
-        plt.xlabel('Episodes')
-        plt.ylabel('Returns')
-        plt.title('Ave Reward (k{}_alpha{}_norm{}_b{}_seed{})'.format(k, alpha, norm, b, seed))
+        # """plot 每个seed下 whole episode 的奖励和合作率"""
+        # episodes_list = list(range(len(return_list)))
+        # plt.figure(figsize=(16, 5))
+        # plt.subplot(121)
+        # plt.plot(episodes_list, return_list)
+        # plt.xlabel('Episodes')
+        # plt.ylabel('Returns')
+        # plt.title('Ave Reward (k{}_alpha{}_norm{}_b{}_seed{})'.format(k, alpha, norm, b, seed))
         
-        plt.subplot(122)
-        plt.plot(episodes_list, cooperate_rate)
-        plt.xlabel('Episodes')
-        plt.ylabel('Cooperation Rate')
-        plt.title('Ave Cooperation Rate (k{}_alpha{}_norm{}_b{}_seed{})'.format(k, alpha, norm, b, seed))
+        # plt.subplot(122)
+        # plt.plot(episodes_list, cooperate_rate)
+        # plt.xlabel('Episodes')
+        # plt.ylabel('Cooperation Rate')
+        # plt.title('Ave Cooperation Rate (k{}_alpha{}_norm{}_b{}_seed{})'.format(k, alpha, norm, b, seed))
 
-        pic_file = os.path.join(file_path_prefix, "k{}_alpha{}_norm{}_b{}_seed{}.png".format(k, alpha, norm, b, seed))
-        plt.savefig(pic_file)
+        # pic_file = os.path.join(file_path_prefix, "k{}_alpha{}_norm{}_b{}_seed{}.png".format(k, alpha, norm, b, seed))
+        # plt.savefig(pic_file)
 
     return seed_ave_return, seed_ave_rate, return_list, cooperate_rate
 
@@ -310,8 +311,9 @@ N_STATES = 2  # opponent's reputation  bad = 0，good = 1
 ACTIONS = 2  #  0 = defect  1 = cooperate
 
 # 文件名
-# os.makedirs('./results/mix'+'/'+'k{}alpha{}'.format(k,alpha))
-file_path_prefix = './results/mix/k{}alpha{}'.format(k,alpha)
+file_path_prefix = './results/mix/k{}alpha{}'.format(k, int(alpha*10))
+if not os.path.exists(file_path_prefix):
+    os.makedirs('./results/mix'+'/'+'k{}alpha{}'.format(k, int(alpha*10)))
 data_file = os.path.join(file_path_prefix, "b{}_norm{}_seed{}.csv".format(b, norm, seed))
 
 with open(data_file, 'w', encoding='UTF8', newline='') as f:
