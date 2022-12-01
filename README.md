@@ -58,17 +58,9 @@ The recovering of Fig.2 in the paper.
 ### 3. Top-Down Intrinsic Reward
 The recovering of Fig.4 in the paper. b/c = 5, norm 9.
 
-Alpha = 0.9
- <br/><img src='/results/intrinsic/alpha90.png'>
+Alpha = 0.9, 0.6, 0.3
+ <br/><img src='/results/intrinsic/alpha_sum.png'>
 
-Alpha = 0.8
- <br/><img src='/results/intrinsic/alpha80.png'>
-
-Alpha = 0.6
- <br/><img src='/results/intrinsic/alpha60.png'>
- 
-Alpha = 0.3
- <br/><img src='/results/intrinsic/alpha30.png'>
 
 
 ### 4. Top-Down Seeding + Intrinsic Reward
