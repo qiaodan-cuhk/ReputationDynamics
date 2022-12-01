@@ -63,7 +63,7 @@ Alpha = 0.9
 Alpha = 0.8
  <br/><img src='/results/intrinsic/alpha80_b5_norm9.png'>
 
- Alpha = 0.6
+Alpha = 0.6
  <br/><img src='/results/intrinsic/alpha60_b5_norm9.png'>
  
 
@@ -72,4 +72,4 @@ Alpha = 0.8
 The recovering of Fig.6 in the paper. 
 
 Alpha = 0.6, k = 10%, norm 9, b=5
- <br/><img src='/results/mix/alpha60%seeding10%.png'>
+ <br/><img src='/results/mix/alpha60seeding10.png'>
