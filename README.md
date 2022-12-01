@@ -66,3 +66,10 @@ Alpha = 0.8
  Alpha = 0.6
  <br/><img src='/results/intrinsic/alpha60_b5_norm9.png'>
  
+
+
+### 4. Top-Down Seeding + Intrinsic Reward
+The recovering of Fig.6 in the paper. 
+
+Alpha = 0.6, k = 10%, norm 9, b=5
+ <br/><img src='./results/mix/k1alpha0.6/alpha60%seeding10%.png'>
