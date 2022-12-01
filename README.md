@@ -72,4 +72,4 @@ Alpha = 0.8
 The recovering of Fig.6 in the paper. 
 
 Alpha = 0.6, k = 10%, norm 9, b=5
- <br/><img src='./results/mix/k1alpha0.6/alpha60%seeding10%.png'>
+ <br/><img src='/results/mix/k1alpha0.6/alpha60%seeding10%.png'>
