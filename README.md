@@ -51,6 +51,7 @@ The effective norms 0 holds a low cooperation 0.26% in medium benefitial rate b/
 
 ### 2. Top-Down Seeding
 The recovering of Fig.2 in the paper. 
+ <br/><img src='/results/seeding/coopertion_rate_summary.png'>
  <br/><img src='/results/seeding/seeding_agents_to_promote_cooperation.png'>
  
 
