@@ -21,57 +21,31 @@ def build_q_table(n_states, actions, N):
     table = torch.zeros(N, n_states, actions)
     return table
 
-"""
-2nd-order reputation and policy
-16 rules + random rules and 16 strategies
-Bad rep = 0, good rep = 1
-defect = 0, cooperate = 1
-"""
+def norm_q_table(n_case, n_states, N):
+    table = torch.zeros(N, n_case, n_states)
+    return table
 
-def norm_choice(focal_act, opponent_rep, assignment_error, norm):
-    focal_rep_new = -1
 
-     # ineffective norm 0 (0000)
-    if norm == 0:
-        focal_rep_new = 0
-
-    # effective norm 9 (1001)
-    if norm == 9:
-        if opponent_rep == 0:
-            if focal_act == 0:
-                focal_rep_new = 1
-            else:
-                focal_rep_new = 0
+def classify_interaction(focal_action, opponent_reputation):
+    if opponent_reputation == 1:
+        if focal_action == 0:
+            interaction = 0
         else:
-            if focal_act == 0:
-                focal_rep_new = 0
-            else:
-                focal_rep_new = 1
-
-    # ineffective norm 11 (1011)
-    if norm == 11:
-        if opponent_rep == 0:
-            focal_rep_new = 1
+            interaction = 1
+    if opponent_reputation == 0:
+        if focal_action == 0:
+            interaction = 2
         else:
-            if focal_act == 0:
-                focal_rep_new = 0
-            else:
-                focal_rep_new = 1
+            interaction = 3
+    return interaction
 
-    # ineffective norm 15 (1111)
-    if norm == 15:
-        focal_rep_new = 1
-
-    # random norm (hardest)
-    if norm == 16:
-        focal_rep_new = random.randint(0,1)
-
-    if np.random.random() < assignment_error:
-        focal_rep_new = 1 - focal_rep_new
-    else:
-        focal_rep_new = focal_rep_new
-
-    return focal_rep_new
+"""
+norm_table_state = interaction
+0: D with Good
+1: C with Good
+2: D with Bad
+3: C with Bad
+"""
 
 
 """  
@@ -139,11 +113,13 @@ class ReplayBuffer:
 
 class TabularQ:
     def __init__(self, n_states, n_actions, N, learning_rate,
-                 gamma, epsilon, device):
+                 gamma, epsilon, device, n_case):
         self.q_table = build_q_table(n_states, n_actions, N)  # Q tabular 2*2*10
+        self.norm_table = norm_q_table(n_case, n_states, N)    # 4*2 social norm
         self.gamma = gamma
         self.epsilon = epsilon
         self.device = device
+        self.states = n_states
         self.actions = n_actions
         self.learning_rate = learning_rate
         
@@ -171,6 +147,28 @@ class TabularQ:
         self.q_table[index, state, action] = q_value_new.item()
 
 
+    def norm_judge(self, interaction, index):
+        if np.random.random() < self.epsilon:
+            norm_judgement = np.random.randint(self.states)
+        else:
+            norm_judgement = self.norm_table[index, interaction, :].argmax().item()
+        return norm_judgement
+
+    """根据interaction属于四个中哪一类，来选择给什么声誉"""
+
+    def norm_update(self, once_judge, index, reward, interaction, rep_grading):
+        if once_judge[index] is True:
+            norm_value = self.norm_table[index, interaction, rep_grading]
+            norm_value_new = norm_value + self.learning_rate*reward
+            self.norm_table[index, interaction, rep_grading] = norm_value_new.item()
+        else:
+            self.norm_table[index, interaction, rep_grading] = self.norm_table[index, interaction, rep_grading]
+
+"""
+只有评价过别人的agent，才能更新norm策略，没评价过的once_judge为False，评价过的是True
+"""
+
+
 """
 10 agents
 \pi = Q(s, a)
@@ -186,13 +184,15 @@ agent should choose the action, and judge other agents as good/bad without rewar
 
 
 def Rep_episode(epi_index):
-    agent = TabularQ(N_STATES, ACTIONS, N, lr, gamma, epsilon, device)  #Q tabel不刷新
+    agent = TabularQ(N_STATES, ACTIONS, N, lr, gamma, epsilon, device, N_CASE)  #Q tabel不刷新
 
     Reputation = []
     for s in range(N):
         Reputation.append(random.randint(0,1)) #随机初始化reputation矩阵
 
     Seed_state = [True]*k+[False]*(N-k)  # seeding k agents with rule5
+    once_judge = [False]*N  # whether an agent judge others or not
+    interaction_memory = torch.full((N, 2, 2), -1)   # both reputation judgement storage, cover each time of judging
 
     return_list = []
     cooperate_rate = []
@@ -204,11 +204,24 @@ def Rep_episode(epi_index):
             cooperate_time = []
 
             for step in range(K):
-                p1, p2 = random.sample(range(0,10), 2)  # index of 2 players in game
+                p1, p2, audience = random.sample(range(0,10), 3)  # index of 2 players in game and 1 audience to judge
                 s1, s2 = Reputation[p2], Reputation[p1]  # reputation of 2 players
                 seed_state1, seed_state2 = Seed_state[p1], Seed_state[p2]
                 a1, a2 = agent.take_action(s1, p1, seed_state1), agent.take_action(s2, p2, seed_state2)    # take_action(state, index)
-                rep1_, rep2_ = norm_choice(a1, s1, assignment_error, norm), norm_choice(a2, s2, assignment_error, norm)   #norm_choice(action1, reputation2, error, norm)
+
+                # audience = random.sample(from the rest 8 agents)#choose the judger
+
+                once_judge[audience] = True
+                class_p1 = classify_interaction(a1, s1)
+                class_p2 = classify_interaction(a2, s2)
+                interaction_memory[audience, 0, 0] = class_p1
+                interaction_memory[audience, 1, 0] = class_p2
+                rep1_ = agent.norm_judge(class_p1, audience)
+                rep2_ = agent.norm_judge(class_p2, audience)
+                interaction_memory[audience, 0, 1] = rep1_
+                interaction_memory[audience, 1, 1] = rep2_
+                Reputation[p1], Reputation[p2] = rep1_, rep2_ 
+                # rep1_, rep2_ = norm_choice(a1, s1, assignment_error, norm), norm_choice(a2, s2, assignment_error, norm)   #norm_choice(action1, reputation2, error, norm)
                 s1_, s2_ = rep2_, rep1_           
                 r1, r2 = reward_func(a1, a2, b, c)
                 r_ave = (r1+r2)/2      # real reward from env
@@ -220,9 +233,7 @@ def Rep_episode(epi_index):
                 r_sum2 = (1-alpha)*r2 + alpha*r_intro2   # Ri = 1-\alpha Ui + \alpha Si bigger alpha means bigger introspecture
                 
                 buffer.add(s1, a1, r_sum1, s1_, p1)
-                buffer.add(s2, a2, r_sum2, s2_, p2)  
-                
-                Reputation[p1], Reputation[p2] = rep1_, rep2_   
+                buffer.add(s2, a2, r_sum2, s2_, p2)                    
             
                 episode_return.append(r_ave)
 
@@ -232,7 +243,13 @@ def Rep_episode(epi_index):
                 else:
                     cooperate_time.append(0)
 
-            
+                #只用 env reward 更新 norm，不用内在激励
+                agent.norm_update(once_judge, p1, r1, interaction_memory[p1, 0, 0], interaction_memory[p1, 0, 1])     #更新p1的两次判断
+                agent.norm_update(once_judge, p1, r1, interaction_memory[p1, 1, 0], interaction_memory[p1, 1, 1]) 
+                agent.norm_update(once_judge, p2, r2, interaction_memory[p2, 0, 0], interaction_memory[p2, 0, 1])     #更新p2的两次判断
+                agent.norm_update(once_judge, p2, r2, interaction_memory[p2, 1, 0], interaction_memory[p2, 1, 1]) 
+                
+
                 if buffer.size(p1) > minimal_size:
                     b_s, b_a, b_r, b_s_ = buffer.sample(1, p1)                
                     transition1 = {
@@ -262,7 +279,7 @@ def Rep_episode(epi_index):
         seed_ave_return = torch.tensor(return_list[last_half:]).mean()
         seed_ave_rate = torch.tensor(cooperate_rate[last_half:]).mean()
 
-    return seed_ave_return, seed_ave_rate, return_list, cooperate_rate
+    return seed_ave_return, seed_ave_rate, return_list, cooperate_rate, agent.q_table, agent.norm_table
 
 
 
@@ -289,11 +306,14 @@ buffer_size = 500
 device = torch.device("cpu")
 N_STATES = 2  # opponent's reputation  bad = 0，good = 1  
 ACTIONS = 2  #  0 = defect  1 = cooperate
+N_CASE = N_STATES*ACTIONS   # pairs of 2-order social norm (focal_action * opponent_reputation)
+
+
 
 # 文件名
-file_path_prefix = './results/mix/k{}alpha{}'.format(k, int(alpha*10))
+file_path_prefix = './results/bottomup/k{}alpha{}'.format(k, int(alpha*10))
 if not os.path.exists(file_path_prefix):
-    os.makedirs('./results/mix'+'/'+'k{}alpha{}'.format(k, int(alpha*10)))
+    os.makedirs('./results/bottomup'+'/'+'k{}alpha{}'.format(k, int(alpha*10)))
 data_file = os.path.join(file_path_prefix, "b{}_norm{}_seed{}.csv".format(b, norm, seed))
 
 with open(data_file, 'w', encoding='UTF8', newline='') as f:
@@ -301,6 +321,8 @@ with open(data_file, 'w', encoding='UTF8', newline='') as f:
     random.seed(seed)
     np.random.seed(seed)
     torch.manual_seed(seed)
-    ave_reward, ave_rate, reward_epi, rate_epi = Rep_episode(seed)
+    ave_reward, ave_rate, reward_epi, rate_epi, Final_policy, Final_norm = Rep_episode(seed)
     writer.writerow(reward_epi)
     writer.writerow(rate_epi)
+    writer.writerow(Final_policy)
+    writer.writerow(Final_norm)
